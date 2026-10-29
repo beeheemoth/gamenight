@@ -1,0 +1,17 @@
+{
+  "name": "gamesite",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.8",
+    "@mercuryworkshop/bare-mux": "^2.1.9",
+    "@mercuryworkshop/epoxy-transport": "^2.1.29",
+    "@mercuryworkshop/wisp-js": "^0.5.1",
+    "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
+    "fastify": "^5.12.7"
+  }
+}

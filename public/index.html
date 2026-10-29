@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Night</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">Game Night</a>
+  <nav><a href="/browse.html">Web proxy</a><a href="/logout">Log out</a></nav>
+</header>
+
+<section class="hero">
+  <h1>What are we playing?</h1>
+  <p>Pick a game below. Everything here is just for us.</p>
+</section>
+
+<main class="grid" id="grid">
+  <a class="tile c2 wide" href="/browse.html">
+    <span class="art" aria-hidden="true">W</span>
+    <h2>Web proxy</h2>
+    <p>Open any website through this server.</p>
+  </a>
+</main>
+
+<script>
+  const grid = document.getElementById("grid");
+  const colors = ["c1", "c3", "c2"];
+  function tile(g, i) {
+    const a = document.createElement("a");
+    a.className = "tile " + colors[i % colors.length];
+    a.href = g.path;
+    const art = document.createElement("span");
+    art.className = "art"; art.setAttribute("aria-hidden", "true");
+    art.textContent = (g.title || "?").charAt(0).toUpperCase();
+    const h = document.createElement("h2"); h.textContent = g.title;
+    a.append(art, h);
+    if (g.description) { const p = document.createElement("p"); p.textContent = g.description; a.append(p); }
+    return a;
+  }
+  fetch("/games.json").then(r => r.json()).then(({ games }) => {
+    if (games && games.length) { games.forEach((g, i) => grid.append(tile(g, i))); return; }
+    const e = document.createElement("div");
+    e.className = "tile empty";
+    e.innerHTML = "<h2>No games yet</h2><p>Put a game folder in <code>public/games/</code>, then add it to <code>games.json</code>.</p>";
+    grid.append(e);
+  }).catch(() => {});
+</script>
+</body>
+</html>

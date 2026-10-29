@@ -1,0 +1,7 @@
+# Replace with your real domain. Caddy gets and renews HTTPS certs automatically.
+# For local testing, use:  localhost
+games.example.com {
+	encode gzip
+	# Everything (site, proxy assets, and the /wisp/ websocket) goes to the Node app.
+	reverse_proxy localhost:8080
+}

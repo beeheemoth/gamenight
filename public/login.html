@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Night · Log in</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&display=swap">
+<style>
+  :root { --bg:#17122b; --panel:#231b3f; --ink:#f4f0ff; --muted:#a8a1c6; --edge:#0d0a1d; --a1:#4de1d2; --on-a1:#0d0a1d; --a3:#ff7eb6; --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif; }
+  @media (prefers-color-scheme: light) { :root { --bg:#f5f2ff; --panel:#fff; --ink:#1d1636; --muted:#675f8c; --edge:#1d1636; --a1:#5b3df5; --on-a1:#fff; --a3:#c2185b; } }
+  html,body { height:100%; margin:0; }
+  body { display:grid; place-items:center; padding:20px; font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--ink); }
+  .box { width:min(380px,100%); background:var(--panel); border:3px solid var(--edge); border-radius:24px; box-shadow:8px 8px 0 var(--edge); padding:30px; }
+  h1 { font:800 38px/1 var(--display); letter-spacing:-.03em; margin:0 0 8px; }
+  p { margin:0 0 22px; color:var(--muted); }
+  input { width:100%; box-sizing:border-box; padding:13px 18px; border-radius:999px; border:3px solid var(--edge); background:var(--bg); color:inherit; font:inherit; }
+  :focus-visible { outline:3px solid var(--a1); outline-offset:3px; }
+  button { width:100%; margin-top:14px; padding:13px; border-radius:999px; border:3px solid var(--edge); background:var(--a1); color:var(--on-a1); font:800 18px var(--display); cursor:pointer; box-shadow:4px 4px 0 var(--edge); transition:transform .1s, box-shadow .1s; }
+  button:active { transform:translate(4px,4px); box-shadow:0 0 0 var(--edge); }
+  #msg { min-height:22px; margin-top:12px; font-size:15px; color:var(--a3); }
+  @media (prefers-reduced-motion: reduce) { button { transition:none; } }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>Game Night</h1>
+  <p>Enter the password to come in.</p>
+  <input id="pw" type="password" placeholder="Password" autofocus autocomplete="current-password">
+  <button id="go">Enter</button>
+  <div id="msg"></div>
+</div>
+<script>
+  const pw = document.getElementById("pw"), msg = document.getElementById("msg");
+  async function submit() {
+    msg.textContent = "";
+    try {
+      const r = await fetch("/login", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ password: pw.value }) });
+      if (r.ok) { location.href = "/"; return; }
+      const d = await r.json().catch(() => ({}));
+      msg.textContent = d.error || "Something went wrong";
+    } catch { msg.textContent = "Couldn't reach the server"; }
+    pw.select();
+  }
+  document.getElementById("go").addEventListener("click", submit);
+  pw.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+</script>
+</body>
+</html>
